@@ -212,16 +212,17 @@ public class FlatFileStorage extends SkungeeStorage {
 //				BungeeSockets.sendAll(new BungeePacket(false, BungeePacketType.UPDATEVARIABLES, name, values));
 //			}
 //		}
-		if (variables.containsKey(name) && !loadingHash) {
-			try {
-				writer.close();
-			} catch (IOException e) {
-				platform.consoleMessage("Failed to close the writer while setting the value: " + name);
-				e.printStackTrace();
-			}
-			variables.remove(name);
-			loadFromHash();
-		}
+		delete(name);
+//		if (variables.containsKey(name) && !loadingHash) {
+//			try {
+//				writer.close();
+//			} catch (IOException e) {
+//				platform.consoleMessage("Failed to close the writer while setting the value: " + name);
+//				e.printStackTrace();
+//			}
+//			variables.remove(name);
+//			loadFromHash();
+//		}
 		variables.put(name, values);
 		try {
 			writer.append(name);
