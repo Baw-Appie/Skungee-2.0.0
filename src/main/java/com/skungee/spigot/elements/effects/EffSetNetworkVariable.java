@@ -27,7 +27,7 @@ import java.util.concurrent.TimeoutException;
 public class EffSetNetworkVariable extends Effect {
 
 	static {
-		Skript.registerEffect(EffSetNetworkVariable.class, "set network variable %objects% to %objects%");
+		Skript.registerEffect(EffSetNetworkVariable.class, "set network variable %objects% to variable %objects%");
 	}
 
 	private Variable<?> networkVariable;
@@ -62,8 +62,6 @@ public class EffSetNetworkVariable extends Effect {
 		if(nVarList) nVarName = nVarName.substring(0, nVarName.length() - 1);
 
 		Object variable = Variables.getVariable(tVarName, event, local);
-		System.out.println(variable);
-		System.out.println(tVarName);
 		if(variable instanceof Map) {
 			// List Array
 			for(Object index : ((Map<Object, Object>) variable).keySet()) {
