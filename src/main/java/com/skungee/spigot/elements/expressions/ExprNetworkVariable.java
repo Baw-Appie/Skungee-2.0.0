@@ -2,6 +2,7 @@ package com.skungee.spigot.elements.expressions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
@@ -99,6 +100,7 @@ public class ExprNetworkVariable extends SimpleExpression<Object> {
 
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
+		if(mode == ChangeMode.SET) return null;
 		if (isSingle() && (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)) {
 			Skript.error("Skungee cannot " + mode.toString() + " values from a single variable. " + 
 					"Skungee would have to send two communication packets, thus resulting in performance loss. Please get, modify and set to " + mode.toString()
