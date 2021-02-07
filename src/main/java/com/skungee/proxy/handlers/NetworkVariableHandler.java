@@ -2,6 +2,7 @@ package com.skungee.proxy.handlers;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 import com.google.common.collect.Lists;
@@ -43,7 +44,7 @@ public class NetworkVariableHandler extends Handler {
 				Optional<SkriptChangeMode> mode = variable.getChanger();
 				if (mode.isPresent()) {
 					ArrayList<Value> modify = new ArrayList<Value>();
-					Value[] data = storage.get(variableString);
+					Value[] data = storage.getValueArray(variableString);
 					if (data != null)
 						modify = Lists.newArrayList(data);
 					if (!variable.areValuesValid() && !(mode.get() == SkriptChangeMode.RESET || mode.get() == SkriptChangeMode.DELETE))
@@ -71,12 +72,25 @@ public class NetworkVariableHandler extends Handler {
 			}
 		} else if (object.has("names")) {
 			JsonArray variables = new JsonArray();
-			Streams.stream(object.get("names").getAsJsonArray())
-					.map(element -> element.getAsString())
-					.map(name -> new NetworkVariable(name, storage.get(name)))
-					.filter(variable -> variable.areValuesValid())
-					.map(variable -> serializer.serialize(variable, NetworkVariable.class, null))
-					.forEach(element -> variables.add(element));
+
+			for(JsonElement element : object.get("names").getAsJsonArray()) {
+				String name = element.getAsString();
+				HashMap<String, Value> data = storage.get(name);
+				for (String i : data.keySet()) {
+					Value v = data.get(i);
+					NetworkVariable nv = new NetworkVariable(i, new Value[] {v});
+					if(!nv.areValuesValid()) continue;
+					JsonElement e = serializer.serialize(nv, NetworkVariable.class, null);
+					variables.add(e);
+				}
+			}
+
+//			Streams.stream(object.get("names").getAsJsonArray())
+//					.map(element -> element.getAsString())
+//					.map(name -> new NetworkVariable(name, storage.get(name)))
+//					.filter(variable -> variable.areValuesValid())
+//					.map(variable -> serializer.serialize(variable, NetworkVariable.class, null))
+//					.forEach(element -> variables.add(element));
 			returning.add("variables", variables);
 		}
 		return returning;

@@ -1,6 +1,8 @@
 package com.skungee.proxy.variables;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 import com.skungee.proxy.ProxyPlatform;
@@ -33,7 +35,9 @@ public abstract class SkungeeStorage {
 
 	public abstract void delete(String... index);
 
-	public abstract Value[] get(String index);
+	public abstract HashMap<String, Value> get(String index);
+
+	public abstract Value[] getValueArray(String index);
 
 	/**
 	 * @returns true if initialization was successful.

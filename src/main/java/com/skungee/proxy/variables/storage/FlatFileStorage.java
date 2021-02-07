@@ -62,9 +62,31 @@ public class FlatFileStorage extends SkungeeStorage {
 		} else load();
 		return true;
 	}
-	
+
 	@Override
-	public Value[] get(String index) {
+	public HashMap<String, Value> get(String index) {
+		HashMap<String, Value> values = new HashMap<String, Value>();
+		if (index.endsWith("::*")) {
+			index = index.substring(0, index.length() - 1);
+			for (Entry<String, Value[]> entry : variables.entrySet()) {
+				if (entry.getKey().startsWith(index)) {
+					Value[] data = variables.get(entry.getKey());
+					if (data == null) continue;
+					for (Value value : data) {
+						values.put(entry.getKey(), value);
+					}
+				}
+			}
+		} else {
+			Value[] v = variables.get(index);
+			if(v.length == 0) return values;
+			values.put(index, variables.get(index)[0]);
+		}
+		return values;
+	}
+
+	@Override
+	public Value[] getValueArray(String index) {
 		if (index.endsWith("::*")) {
 			ArrayList<Value> values = new ArrayList<Value>();
 			index = index.substring(0, index.length() - 1);
